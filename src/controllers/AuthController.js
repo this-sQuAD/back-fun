@@ -4,7 +4,7 @@ import User from '../models/User.js'
 
 class AuthController {
   static register = async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, password, confirmPassword, role = "user" } = req.body;
 
     if (!name) {
       return res.status(422).json({ message: 'O nome é obrigatório.' })
@@ -22,6 +22,10 @@ class AuthController {
       return res.status(422).json({ message: 'As senhas não conferem.' })
     }
 
+    if (role != "user" && role != "admin") {
+      return res.status(422).json({ message: "O perfil do usuário deve ser de 'admin' ou 'user'." })
+    }
+
     const userExists = await User.findOne({ email: email })
 
     if (userExists) {
@@ -35,6 +39,7 @@ class AuthController {
       name,
       email,
       password: passwordHash,
+      role
     })
     try {
       await user.save()
