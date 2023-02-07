@@ -2,7 +2,6 @@ import express from "express";
 import UserController from "../controllers/UserController.js";
 import authUser from "../middlewares/auth/checkToken.js";
 
-
 const router = express.Router();
 
 router
