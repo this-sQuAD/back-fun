@@ -6,7 +6,7 @@ class authUser {
   const token = authHeader && authHeader.split(" ")[1]
 
   if (!token) {
-    return res.status(401).json({ message: 'Acesso negado!' })
+    return res.status(401).json({ message: 'No Token provided.' })
   }
 
   try {
