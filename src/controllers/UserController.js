@@ -5,43 +5,56 @@ class UserController {
   static getUser = async (req, res) => {
     const id = req.params.id;
 
-    const user = await User.findById(id, '-password')
+    try {
+      const user = await User.findById(id, '-password')
 
-    if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado.' })
+      if (!user) {
+        return res.status(404).json({ message: 'Usuário não encontrado.' })
+      }
+
+      return res.status(200).json({ user })
+    } catch (error) {
+      res.status(422).json({ message: 'Não foi possível localizar o usuário.' })
+      throw new Error(`Não foi possível localizar os usuários. Error: ${error}`)
     }
 
-    res.status(200).json({ user })
   }
 
   static getAllUsers = async (req, res) => {
     let { name } = req.query;
 
-    const query = name ? { 'name': name } : null;
+    try {
+      const query = name ? { 'name': name } : null;
 
-    User.find(query)
-      .exec((err, users) => {
-        if (users.length == 0) {
-          return res.status(404).send({ message: "Não localizamos nenhum usuário, verifique se os parâmetros estão corretos." });
-        }
-        res.status(200).json(users);
-      })
+      User.find(query, '-password')
+        .exec((error, users) => {
+          if (users.length == 0) {
+            return res.status(404).send({ message: "Não localizamos nenhum usuário, verifique se os parâmetros estão corretos." });
+          }
+          return res.status(200).json(users);
+        })
+    } catch (error) {
+      res.status(422).json({ message: 'Não foi possível localizar os usuários.' })
+      throw new Error(`Não foi possível localizar os usuários. Error: ${error}`)
+    }
+
   }
 
   static deleteUser = (req, res) => {
     const id = req.params.id;
 
-    User.findByIdAndDelete(id, (err, user) => {
-      if (err) {
-        return res.status(400).send({ message: err.message })
-      }
+    User.findByIdAndDelete(id)
+      .exec((error, user) => {
+        if (error) {
+          return res.status(400).send({ message: error.message })
+        }
 
-      if (!user) {
-        return res.status(404).send({ message: "Item não encontrado, verifique se os parâmetros estão corretos." })
-      }
+        if (!user) {
+          return res.status(404).send({ message: "Item não encontrado, verifique se os parâmetros estão corretos." })
+        }
 
-      res.status(200).send({ message: "Usuário removido com sucesso." })
-    })
+        return res.status(200).send({ message: "Usuário removido com sucesso." })
+      })
   }
 }
 
