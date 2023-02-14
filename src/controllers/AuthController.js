@@ -73,8 +73,13 @@ class AuthController {
 
       const token = jwt.sign({
         id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
       },
-        secret,
+        secret, {
+          expiresIn: 86400,
+        }
       )
 
       res.status(200).json({ message: 'Autenticação realizada com sucesso.', token })
