@@ -123,7 +123,7 @@ class AuthController {
       // TODO Colocar para enviar email ao solicitante correto
 
       transport.sendMail({
-        to: 'lennon.rodrigues@tallos.com.br',
+        to: 'seja1uppraalguem@gmail.com', // TODO mudar o email
         subject: 'Recuperação de Senha - sQuAD',
         from: mailerUser,
         html: `<p>Você pode solicitar a nova senha usando o Token: ${token}</p>
