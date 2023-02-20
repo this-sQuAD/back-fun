@@ -16,12 +16,18 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.0",
     "nodemailer": "^6.9.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "swagger-ui-express": "^4.6.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
     "nodemon": "^2.0.20"
   }
 }

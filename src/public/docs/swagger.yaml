@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: sQuAD - API
+  description: Documentação da API do projeto sQuAD - Feito por amigos para estudos.
+  version: 1.0.0
+  contact: squadnoreplyfun@gmail.com
+servers:
+  - url: http://localhost:3000
+    description: Main server
+paths:
+  /users:
+    get:
+      summary: Lista de usuários.
+      description: Retorna a lista de usuários cadastrados.
+      tags:
+        - users
+      responses:
+        '200':    # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        id:
+          type: string
