@@ -4,8 +4,8 @@ Repositório voltado para fins de aprendizado em back-end, o projeto está sendo
 ## Baixando o projeto
 
 - Após clonar o projeto:
--- Entrar na pasta que acabou de ser baixada
--- Executar o comando para baixar todas as dependências
+- Entrar na pasta que acabou de ser baixada
+- Executar o comando para baixar todas as dependências
 ```bash
   docker-compose build
 ```
