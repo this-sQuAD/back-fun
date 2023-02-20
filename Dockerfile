@@ -1,9 +1,9 @@
 FROM node:lts-alpine3.17
 
 # Configuração do usuário/permissões
-WORKDIR /home/node/
+WORKDIR /usr/app
 
-COPY package.json .
+COPY package*.json ./
 RUN npm install
 
 # Copia dos arquivos do projeto

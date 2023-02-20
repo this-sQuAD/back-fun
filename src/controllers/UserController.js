@@ -12,7 +12,7 @@ class UserController {
         return res.status(404).json({ message: 'Usuário não encontrado.' })
       }
 
-      return res.status(200).json({ user })
+      return res.status(200).json(user)
     } catch (error) {
       res.status(422).json({ message: 'Não foi possível localizar o usuário.' })
       throw new Error(`Não foi possível localizar os usuários. Error: ${error}`)
