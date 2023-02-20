@@ -5,8 +5,8 @@ import authUser from "../middlewares/auth/checkToken.js";
 const router = express.Router();
 
 router
-  .get('/user/:id', authUser.checkToken, UserController.getUser)
-  .get('/user', authUser.checkToken, UserController.getAllUsers)
-  .delete('/user/:id', authUser.checkToken, UserController.deleteUser)
+  .get('/users/:id', authUser.checkToken, UserController.getUser)
+  .get('/users', authUser.checkToken, UserController.getAllUsers)
+  .delete('/users/:id', authUser.checkToken, UserController.deleteUser)
 
 export default router;
