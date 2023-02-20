@@ -2,12 +2,12 @@ version: '3'
 
 services:
   back-fun:
-    build: 
+    build:
       dockerfile: ./Dockerfile
       context: .
     volumes:
-      - .:/home/node
-      - /home/node/node_modules
+      - .:/usr/app
+      - /usr/app/node_modules
     ports:
       - 3000:3000
     command: npm run start

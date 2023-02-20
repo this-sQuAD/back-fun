@@ -1,0 +1,478 @@
+openapi: 3.0.0
+info:
+  title: sQuAD
+  contact: squadnoreplyfun@gmail.com
+  version: '1.0.0'
+servers:
+- url: http://localhost:3000
+paths:
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Lista de usuários.
+      operationId: /users
+      parameters:
+        - name: Authorization
+          in: header
+          description: 'Token de autorização fornecido no login'
+          required: true
+          schema:
+            type: string
+            format: hash
+        - name: Name
+          in: query
+          description: 'Filtro pelo nome do usuário'
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnauthorizedError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+      security:
+        - bearerAuth: []
+  /users/{id}:
+    get:
+      tags:
+      - Users
+      summary: Busca de um usuário.
+      operationId: /users:id
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Token de autorização fornecido no login'
+        required: true
+        schema:
+          type: string
+          format: hash
+      - name: id
+        in: path
+        description: Número identificar do usuário.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 0123456789
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnauthorizedError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - Users
+      summary: Remoção de um usuário
+      operationId: Deleteusers/:id
+      parameters:
+      - name: id
+        in: path
+        description: ID do usuário que será removido
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '123456789'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnauthorizedError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+      security:
+      - bearer: []
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Criação de usuários
+      operationId: auth/register
+      parameters:
+      - name: body
+        in: body
+        description: Dados informados na criação de um usuário. A propriedade 'role' é opcional, caso não seja informada será 'user' por padrão. Para a criação de um usuário 'admin', deve ser informação na requisição.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authregisterrequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/Created'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Rota de login do usuário
+      operationId: auth/login
+      parameters:
+      - name: body
+        in: body
+        description: Dados para login do usuário.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authloginrequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+                example:
+                  message: 'Autenticação realizada com sucesso.'
+                  token: '<Token de acesso do usuário>'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+  /auth/forgot_password:
+    post:
+      tags:
+      - Auth
+      summary: Rota de 'esqueci minha senha'
+      operationId: auth/forgot_password
+      parameters:
+      - name: body
+        in: body
+        description: Dados informados na recuperação de senha.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authforgot_password_request'
+      responses:
+        '200':
+          description: OK - Será enviado um e-mail com o token de autorização de curta duração para realização da recuperação de senha.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: 'Você pode solicitar a nova senha usando o Token: <Token de acesso do usuário>'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+  /auth/reset_password:
+    post:
+      tags:
+      - Auth
+      summary: Rota para recuperação de senha
+      operationId: auth/reset_password
+      parameters:
+      - name: body
+        in: body
+        description: Devem ser informados o token temporário e a nova senha.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authreset_password_request'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: 'Senha alterada com sucesso.'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
+components:
+  schemas:
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
+
+    User:
+      type: object
+      properties:
+        id:
+          description: User ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        name:
+          description: Nome completo
+          type: string
+        email:
+          description: Endereço de e-mail
+          type: string
+        role:
+          description: Perfil do usuário
+          type: string
+        createdAt:
+          description: Data de criação
+          type: string
+    authregisterrequest:
+      title: Register
+      required:
+      - name
+      - email
+      - password
+      - confirmPassword
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+        role:
+          type: string
+          default: 'user'
+      example:
+        name: Example User
+        email: example@user.com.br
+        password: '123'
+        confirmPassword: '123'
+        role: 'admin'
+    authloginrequest:
+      title: authloginrequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: example@user.com.br
+        password: '123'
+    authforgot_password_request:
+      title: authforgot_password_request
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: example@user.com.br
+    authreset_password_request:
+      title: authreset_password_request
+      required:
+      - token
+      - password
+      type: object
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+      example:
+        token: 'Bearer JWT'
+        password: 'Novasenha123'
+    
+    responses:
+      Created: #201
+        description: O recurso criado com sucesso.
+        properties:
+          message:
+            description: 'Mensagem de sucesso'
+            type: string
+            example: "<Nome do recurso> criado com sucesso."
+
+      NotFoundError: #404
+        description: O recurso solicitado não foi localizado.
+        properties:
+          message:
+            description: 'Mensagem de erro'
+            type: string
+            example: "<Nome do recurso> não encontrado."
+
+      UnauthorizedError: #401
+        description: Token de acesso não informado ou inválido.
+        properties:
+          message:
+            description: 'Error message'
+            type: string
+            example: "No token provided."
+      
+      UnprocessableEntity: #422
+        description: Alguma propriedade não foi informada ou inválida.
+        properties:
+          message:
+            description: 'Error message'
+            type: string
+            example: "Não foi possível localizar os <Nome do recurso>"
+
+      BadRequest: #400
+        description: Ocorreu erro durante a solicitação.
+        properties:
+          message:
+            description: 'Error message'
+            type: string
+            example: "Erro da API"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+- name: Users
+- name: Auth
