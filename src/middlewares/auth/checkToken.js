@@ -34,6 +34,24 @@ class authUser {
     }
   }
 
+  static rolePermissions(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader.split(" ")[1];
+
+
+    try {
+      const decodedToken = jwt.decode(token)
+      const role = decodedToken?.role
+      if (role === 'admin') {
+        next()
+      } else {
+        return res.status(403).json({ message: 'Você deve ter privilégios de admin para executar a ação.' })
+      }
+    } catch (error) {
+      res.status(401).json({ message: 'Invalid token.' })
+    }
+
+  }
 }
 
 export default authUser;

@@ -10,7 +10,7 @@ paths:
     get:
       tags:
       - Users
-      summary: Lista de usuários.
+      summary: Lista de usuários
       operationId: /users
       parameters:
         - name: Authorization
@@ -54,11 +54,65 @@ paths:
       deprecated: false
       security:
         - bearerAuth: []
+  /users/register:
+    post:
+      tags:
+      - Users
+      summary: Criação de usuários
+      operationId: users/register
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Token de autorização fornecido no login'
+        required: true
+        schema:
+          type: string
+          format: hash
+      - name: body
+        in: body
+        description: Dados informados na criação de um usuário. A propriedade 'role' é opcional, caso não seja informada será 'user' por padrão. Para a criação de um usuário 'admin', deve ser informação na requisição.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authregisterrequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/Created'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/ForbiddenError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
   /users/{id}:
     get:
       tags:
       - Users
-      summary: Busca de um usuário.
+      summary: Busca de um usuário
       operationId: /users:id
       parameters:
       - name: Authorization
@@ -203,6 +257,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/responses/UnauthorizedError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/ForbiddenError'
         '404':
           description: Not Found
           content:
@@ -218,41 +278,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-  /auth/register:
-    post:
-      tags:
-      - Auth
-      summary: Criação de usuários
-      operationId: auth/register
-      parameters:
-      - name: body
-        in: body
-        description: Dados informados na criação de um usuário. A propriedade 'role' é opcional, caso não seja informada será 'user' por padrão. Para a criação de um usuário 'admin', deve ser informação na requisição.
-        required: true
-        style: simple
-        schema:
-          allOf:
-          - $ref: '#/components/schemas/authregisterrequest'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responses/Created'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responses/BadRequest'
-        '422':
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/responses/UnprocessableEntity'
-      deprecated: false
   /auth/login:
     post:
       tags:
@@ -509,6 +534,14 @@ components:
             description: 'Error message'
             type: string
             example: "No token provided."
+
+      ForbiddenError: #403
+        description: O usuário não possui permissão para executar a ação.
+        properties:
+          message:
+            description: 'Error message'
+            type: string
+            example: "O usuário não possui permissão para executar a ação."
       
       UnprocessableEntity: #422
         description: Alguma propriedade não foi informada ou inválida.
