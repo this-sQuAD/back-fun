@@ -1,4 +1,5 @@
 import User from '../models/User.js'
+import bcrypt from 'bcrypt';
 
 class UserController {
 
@@ -44,6 +45,53 @@ class UserController {
     const id = req.params.id;
 
     User.findByIdAndDelete(id)
+      .exec((error, user) => {
+        if (error) {
+          return res.status(400).send({ message: error.message })
+        }
+
+        if (!user) {
+          return res.status(404).send({ message: "Item não encontrado, verifique se os parâmetros estão corretos." })
+        }
+
+        return res.status(200).send({ message: "Usuário removido com sucesso." })
+      })
+  }
+
+  static updateUser = async (req, res) => {
+    const id = req.params.id;
+    const { name, email, password, role } = req.body;
+
+    const user = await User.findOne({ _id: id })
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado. Verifique os dados informados.' })
+    }
+
+    if (role && role != "user" && role != "admin") {
+      return res.status(422).json({ message: "O perfil do usuário deve ser de 'admin' ou 'user'." })
+    }
+
+    const salt = await bcrypt.genSalt(12)
+    const passwordHash = await bcrypt.hash(password, salt)
+
+    const newUser = {
+      name,
+      email,
+      password: passwordHash,
+      role
+    }
+
+    try {
+      await User.findOneAndUpdate(id, newUser)
+      return res.status(201).json({ message: "Usuário atualizado com sucesso." })
+    } catch (error) {
+      return res.status(500).json({ message: "Erro ao realizar processo." })
+    }
+
+
+
+    User.findByIdAndUpdate(id)
       .exec((error, user) => {
         if (error) {
           return res.status(400).send({ message: error.message })
