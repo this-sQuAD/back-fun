@@ -83,26 +83,11 @@ class UserController {
     }
 
     try {
-      await User.findOneAndUpdate(id, newUser)
+      await User.findOneAndUpdate({_id: id}, newUser)
       return res.status(201).json({ message: "Usuário atualizado com sucesso." })
     } catch (error) {
       return res.status(500).json({ message: "Erro ao realizar processo." })
     }
-
-
-
-    User.findByIdAndUpdate(id)
-      .exec((error, user) => {
-        if (error) {
-          return res.status(400).send({ message: error.message })
-        }
-
-        if (!user) {
-          return res.status(404).send({ message: "Item não encontrado, verifique se os parâmetros estão corretos." })
-        }
-
-        return res.status(200).send({ message: "Usuário removido com sucesso." })
-      })
   }
 }
 
