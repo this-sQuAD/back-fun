@@ -73,7 +73,7 @@ class UserController {
     }
 
     const salt = await bcrypt.genSalt(12)
-    const passwordHash = await bcrypt.hash(password, salt)
+    const passwordHash = password ? await bcrypt.hash(password, salt) : password
 
     const newUser = {
       name,

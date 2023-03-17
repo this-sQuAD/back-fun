@@ -110,6 +110,66 @@ paths:
       deprecated: false
       security:
       - bearerAuth: []
+    put:
+      tags:
+      - Users
+      summary: Edição de usuários
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Token de autorização fornecido no login'
+        required: true
+        schema:
+          type: string
+          format: hash
+      - name: id
+        in: path
+        description: Número identificar do usuário.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 0123456789
+      - name: body
+        in: body
+        description: Dados informados na edição de um usuário. Somente os dados informados no corpo da requisição serão atualizados para o usuário informado.
+        required: true
+        style: simple
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/authregisterrequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/BadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnauthorizedError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/NotFoundError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responses/UnprocessableEntity'
+      deprecated: false
     delete:
       tags:
       - Users
