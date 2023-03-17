@@ -10,7 +10,7 @@ paths:
     get:
       tags:
       - Users
-      summary: Lista de usuários.
+      summary: Lista de usuários
       operationId: /users
       parameters:
         - name: Authorization
@@ -112,7 +112,7 @@ paths:
     get:
       tags:
       - Users
-      summary: Busca de um usuário.
+      summary: Busca de um usuário
       operationId: /users:id
       parameters:
       - name: Authorization
