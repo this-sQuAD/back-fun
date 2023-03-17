@@ -7,7 +7,8 @@ const router = express.Router();
 router
   .get('/users/:id', authUser.checkToken, UserController.getUser)
   .get('/users', authUser.checkToken, UserController.getAllUsers)
-  .delete('/users/:id', authUser.checkToken, UserController.deleteUser)
+  .post('/users/register', authUser.checkToken, authUser.rolePermissions, UserController.register)
   .put('/users/:id', authUser.checkToken, UserController.updateUser)
+  .delete('/users/:id', authUser.checkToken, authUser.rolePermissions, UserController.deleteUser)
 
 export default router;
