@@ -8,7 +8,7 @@ const dbPass = process.env.DB_PASSWORD;
 
 mongoose.set("strictQuery", true);
 
-mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@cluster0.rgut9sp.mongodb.net/?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@cluster0.8jyjt.mongodb.net/users?retryWrites=true&w=majority`)
 
 const db = mongoose.connection;
 
