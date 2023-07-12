@@ -74,10 +74,8 @@ class AuthController {
 
       const mailerUser = process.env.MAILER_USER;
 
-      // TODO Colocar para enviar email ao solicitante correto
-
       transport.sendMail({
-        to: 'seja1uppraalguem@gmail.com', // TODO mudar o email
+        to: `${email}`,
         subject: 'Recuperação de Senha - sQuAD',
         from: mailerUser,
         html: `<p>Você pode solicitar a nova senha usando o Token: ${token}</p>
